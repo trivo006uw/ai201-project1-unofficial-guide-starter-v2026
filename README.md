@@ -26,7 +26,9 @@
      this repo.
 
      Milestone 5. -->
+## What This Does
 
+This project is a retrieval-augmented generation (RAG) system that answers questions using information from campus life, student advice threads, and local city guides. Users can ask questions about topics such as registration, commuting, internships, and places to visit. The system retrieves the most relevant information from the selected corpus and uses it to generate a grounded answer with its source. If the retrieved information is not relevant enough, the system refuses to answer rather than making up information.
 ## Chunking Strategy
 
 **Chunk size:**
@@ -132,15 +134,43 @@ a minor injuries unit locally with limited hours.
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** How should I set up my courses if I commute everyday
 
-**Answer:**
+**Answer:** According to `thread_commuting.txt`, you should stack your courses so that you have three long days instead of five short ones.
 
 ```
 ```
 
 **My relevance cutoff:**
 
+I used a relevance cutoff of **0.6**.
+
+For the five in-scope test questions, the best retrieval distances were:
+
+- 0.2409
+- 0.4038
+- 0.3477
+- 0.2767
+- 0.4510
+
+For the five out-of-scope questions tested against the city guides corpus, the best distances were:
+
+- 0.8896
+- 0.9032
+- 1.0423
+- 0.8497
+- 0.8469
+
+The highest in-scope distance was 0.4510, while the lowest
+out-of-scope distance was 0.8469. This left a clear gap between
+relevant and unrelated questions. I kept the cutoff at 0.6 because
+it falls within this gap: all five in-scope questions passed the
+gate, while all five out-of-scope questions were rejected.
+
+A cutoff that is too low could reject questions that the documents
+can answer, while a cutoff that is too high could allow unrelated
+questions through and cause the system to generate unsupported
+answers.
 <!-- The number you set in config.py, and how you got there.
 
      You ran five questions your corpus covers and the five in OUT_OF_SCOPE
@@ -155,7 +185,9 @@ a minor injuries unit locally with limited hours.
 |  |  |  |
 
 ## How I Used AI
+I used AI to help me understand how to replace the starter's fixed-size chunking with corpus-specific chunking. I showed AI the different document structures, and it suggested splitting advice threads by replies and city guides by Markdown sections while keeping the short campus documents together. After testing the output, I noticed that the city guide chunks were repeating too much introductory text, so I changed the approach to preserve only the guide title with each section.
 
+I also used AI while evaluating my retrieval results and choosing a relevance cutoff. I gave it the distances returned by my in-scope and out-of-scope test questions, and it helped me understand what the distances meant and identify the gap between the two groups. My in-scope questions had best distances from 0.2409 to 0.4510, while my out-of-scope questions tested against the city guides ranged from 0.8469 to 1.0423. Based on those results, I decided to keep the 0.6 cutoff because it accepted all of my test questions while rejecting the unrelated questions.
 <!-- Two specific moments. For each: what you asked for, what came back, and
      what you changed about it.
 
