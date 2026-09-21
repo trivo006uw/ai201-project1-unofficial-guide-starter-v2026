@@ -97,7 +97,79 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    return fallback_split(documents)
+    chunks: list[Chunk] = []
+    for doc in documents:
+
+        # Discussion thread
+        if doc.text.startswith("THREAD:"):
+            parts = doc.text.split("--- reply")
+
+            # The first part contains the thread title
+            title = parts[0].strip()
+
+            # Everything after the first part is a reply
+            replies = parts[1:]
+
+            for index, reply in enumerate(replies):
+                reply = reply.strip()
+
+                # Put the thread title back onto every reply
+                # so each chunk makes sense by itself
+                chunk_text = f"{title}\n\n--- reply {reply}"
+
+                chunks.append(
+                    Chunk(
+                        text=chunk_text,
+                        source=doc.source,
+                        index=index,
+                        produced_by="chunker.py::split_documents",
+                    )
+                )
+
+       # City_guides
+        elif doc.text.startswith("# ") and "## " in doc.text:
+            parts = doc.text.split("## ")
+
+            # Everything before the first ## is the title/introduction
+            header = parts[0].strip()
+
+            # Only keep the first line, which is the document title
+            title = header.split("\n")[0].strip()
+
+            # Each remaining part is one section
+            sections = parts[1:]
+
+            for index, section in enumerate(sections):
+                section = section.strip()
+
+                chunk_text = f"{header}\n\n## {section}"
+
+                chunks.append(
+                    Chunk(
+                        text=chunk_text,
+                        source=doc.source,
+                        index=index,
+                        produced_by="chunker.py::split_documents",
+                    )
+                )
+
+        # campus life
+        elif len(doc.text) <= 800:
+            chunks.append(
+                Chunk(
+                    text=doc.text.strip(),
+                    source=doc.source,
+                    index=0,
+                    produced_by="chunker.py::split_documents",
+                )
+            )
+        
+        # fall back
+        else:
+            chunks.extend(fallback_split([doc]))
+
+    return chunks
+    
 
 
 def describe(chunks: list[Chunk]) -> str:

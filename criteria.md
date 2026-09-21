@@ -57,7 +57,7 @@ in at least 4 of 5 tries.
 
 ## 4. Something about your chunks
 
-Whenever the chunks are created, the character per chunk should be roughly 250-300 characters
+Whenever the chunks are created, 4/5 chunks should preserve complete sentences, and thoughts.
 <!-- YOU WRITE THIS ONE.
 
      How would you know if your chunks were the right size? Name something
@@ -73,7 +73,7 @@ Whenever the chunks are created, the character per chunk should be roughly 250-3
 
 
 **Why this target:**
-<!-- A chunk around that size is enough to be precise, and won't overload the pipeline with a super long chunk -->
+<!-- A chunk around that showed complete thoughts will more likely to have answer in it than being cut off.  -->
 
 
 
