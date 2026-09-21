@@ -57,6 +57,7 @@ in at least 4 of 5 tries.
 
 ## 4. Something about your chunks
 
+Whenever the chunks are created, the character per chunk should be roughly 250-300 characters
 <!-- YOU WRITE THIS ONE.
 
      How would you know if your chunks were the right size? Name something
@@ -72,6 +73,7 @@ in at least 4 of 5 tries.
 
 
 **Why this target:**
+<!-- A chunk around that size is enough to be precise, and won't overload the pipeline with a super long chunk -->
 
 
 
@@ -79,6 +81,7 @@ in at least 4 of 5 tries.
 
 ## 5. Your choice
 
+Answer should contain some expected words from the expect part of the question. Aiming for 3-4/5
 <!-- YOU WRITE THIS ONE TOO.
 
      Pick something you actually care about getting right. It could be about
@@ -90,7 +93,7 @@ in at least 4 of 5 tries.
 
 
 **Why this target:**
-
+<!-- Answer with 3-4 allow us to understand that it is looking at the right place and parsing the correct chunks -->
 
 
 ---
