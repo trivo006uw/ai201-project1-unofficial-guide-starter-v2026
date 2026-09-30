@@ -422,30 +422,71 @@ According to the document `thread_commuting.txt`, you should stack your courses 
      low, and which one you'd tighten and to what.
 
      Milestone 3. -->
+## Diagnoses
 
+### Criterion 1 — Retrieved chunks contain the answer
+
+**Stage: Retrieval**
+
+The main failure occurred during retrieval. Only 2 of the 5 questions retrieved chunks containing the expected information. The internship and commuting questions retrieved relevant documents and were answered correctly, but the advisor, Givens Mill, and Pellew Sands questions did not retrieve chunks containing their expected answers. Because the correct evidence was missing before generation, the model did not have enough information to answer those questions correctly.
+
+### Criterion 2 — Every answer names a source
+
+**Stage: Retrieval / Generation**
+
+This criterion was missed as a consequence of the retrieval failures. When relevant evidence was retrieved, such as `thread_internship_timing.txt` and `thread_commuting.txt`, the generated answers named their sources. For the questions where the needed evidence was not retrieved, the system instead returned that it did not have enough information. This suggests that source attribution itself works when the system has useful retrieved context, but failed retrieval prevented the system from producing a grounded, sourced answer for all five questions.
+
+### Criterion 5 — Answers contain expected information
+
+**Stage: Retrieval**
+
+Only 2 of the 5 questions produced answers containing the expected information. This follows the same pattern as Criterion 1: the internship and commuting questions retrieved useful evidence and generated answers containing the expected information, while the other three questions did not retrieve the evidence needed for their expected answers. The problem therefore appears earlier in the pipeline at retrieval rather than generation, because the generator performed correctly when it received relevant chunks.
+
+### Overall pattern
+
+The misses point to retrieval as the main weakness in the current system. The generator appears capable of producing grounded answers and citing sources when the correct chunks are available. Therefore, my improvement should focus on increasing the chance that retrieval finds the relevant chunks rather than changing the generation prompt.
+
+## The Improvement
+
+<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
+     you picked a fix because it sounded impressive. -->
 ## The Improvement
 
 **What I changed:**
 
+I increased the number of chunks returned by retrieval (`TOP_K`) from 5 to 8 while keeping the relevance cutoff, chunking strategy, embedding model, and generation process unchanged.
+
 **Why I picked it:**
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+My diagnoses showed that retrieval was the main source of failure. When the correct evidence was retrieved, the system was able to generate an appropriate answer and cite its source. I increased `TOP_K` to test whether retrieving more candidate chunks would allow relevant information that was previously outside the top five results to reach the generation stage.
 
 ### Run Log — After
 
 <!-- Same format, same five criteria, three runs each.
      `python run_eval.py --label after` -->
 
+### Run Log — After
+
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunks contain the answer | 4 of 5 | 2 of 5 | 2 of 5 | 2 of 5 | **MISSED** |
+| 2. Every answer names a source | 5 of 5 | 2 of 5 | 2 of 5 | 2 of 5 | **MISSED** |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | **MET** |
+| 4. Chunks preserve complete sentences and thoughts | 4 of 5 | 5 of 5 | 5 of 5 | 5 of 5 | **MET** |
+| 5. Answers contain expected information | 3–4 of 5 | 2 of 5 | 2 of 5 | 2 of 5 | **MISSED** |
+
+**Real output:** Produced by `run_eval.py::main` using `store.py::search` for retrieval and `chunker.py::split_documents` for chunks.
+
+For the internship question, the system continued to retrieve `thread_internship_timing.txt` and correctly answered that large employers close applications in October and November while smaller and local employers hire in February and March.
+
+For the commuting question, the system continued to retrieve `thread_commuting.txt` and correctly recommended stacking courses into fewer days.
+
+The advisor and Givens Mill questions were still refused by the relevance gate, while the Pellew Sands question passed the gate but did not retrieve enough relevant information to answer.
 
 **Did it help?**
+
+Increasing `TOP_K` from 5 to 8 did not improve the measured acceptance criteria. The system still met Criteria 3 and 4 and missed Criteria 1, 2, and 5. Although retrieving more chunks added additional source documents for some questions, it did not retrieve the missing evidence needed to answer the three failing questions. This showed that simply increasing the number of semantic retrieval results was not enough to solve the underlying retrieval problem.
+
 
 <!-- Say plainly whether it did, and how you know. If it made things worse,
      say that — a change that backfired, honestly reported, earns full credit
@@ -454,19 +495,19 @@ According to the document `thread_commuting.txt`, you should stack your courses 
 
      Milestone 4. -->
 
+
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
+Criteria 1, 2, and 5 are still missed after increasing `TOP_K` from 5 to 8. The system still correctly answers the internship and commuting questions, but it cannot answer the advisor, Givens Mill, and Pellew Sands questions.
 
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
+Increasing the number of retrieved chunks did not solve the problem because the additional results still did not contain the missing information. For example, the Pellew Sands question retrieved more documents after the change, but those documents were still unrelated to the expected answer. If I continued improving the system, I would focus on the retrieval strategy rather than simply retrieving more semantic results. I would consider using hybrid retrieval that combines semantic similarity with keyword matching so that specific names and phrases have another way of finding relevant documents.
 
-     Milestone 5. -->
+I stopped after this change because the assignment asks for one measured improvement. Even though the change did not improve my acceptance criteria, the experiment showed that increasing `TOP_K` alone is not enough to solve the retrieval failures.
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
+Knowing what I know now, I would make my acceptance criteria more precise about which corpus each question should be evaluated against. My test questions include questions about student advice, campus life, and city guides, while an evaluation run searches a selected corpus. Making the corpus associated with each question explicit would make retrieval failures easier to interpret.
 
-     Milestone 5. -->
+I would also rewrite Criterion 5 to use a clearer numerical target. Instead of saying that answers should contain expected words and aiming for "3–4/5," I would define it as: **"At least 4 of 5 answers contain the expected information specified in `questions.py`."** This would make the criterion easier to score consistently as either MET or MISSED.
+
+Finally, I would keep the relevance-gate criterion because it gave me a clear and repeatable measurement. The gate rejected all five out-of-scope questions consistently, which made it easy to determine whether that part of the system was working.
