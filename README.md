@@ -227,17 +227,162 @@ I also used AI while evaluating my retrieval results and choosing a relevance cu
      Milestone 1. -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
-|---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+|1 — MISSED: Only 2/5 questions retrieved chunks containing the expected answer, below the 4/5 target.
+2 — MISSED: Only 2/5 questions produced answers naming a source, below the 5/5 target.
+3 — MET: The relevance gate refused all 5/5 out-of-scope questions, exceeding the 4/5 target.
+4 — MET: All 5 sampled chunks preserved complete sentences and thoughts, exceeding the 4/5 target.
+5 — MISSED: 2/5 answers contained the expected information, below the 3–4/5 target.
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
 
+## Real output
+
+This is what the system actually produced. Paste the relevant parts
+into your README underneath the table — the rubric asks for real
+output as text, not a description of it.
+
+### What do students say about summer internship timing to apply? — run 1
+
+- Best distance: 0.2409 (passed the gate)
+- Sources retrieved: thread_first_gen.txt, thread_first_year_regret.txt, thread_internship_timing.txt
+
+```
+According to the documents, large employers close their summer internship applications in October and November of the previous year. Meanwhile, smaller and local places typically hire in February and March. 
+
+Source: `thread_internship_timing.txt`
+```
+
+### What do students say about summer internship timing to apply? — run 2
+
+- Best distance: 0.2409 (passed the gate)
+- Sources retrieved: thread_first_gen.txt, thread_first_year_regret.txt, thread_internship_timing.txt
+
+```
+According to the documents, large employers close their applications for summer internships in October and November of the preceding year, while smaller and local places tend to hire in February and March. 
+
+Source: `thread_internship_timing.txt`
+```
+
+### What do students say about summer internship timing to apply? — run 3
+
+- Best distance: 0.2409 (passed the gate)
+- Sources retrieved: thread_first_gen.txt, thread_first_year_regret.txt, thread_internship_timing.txt
+
+```
+Based on the documents provided, large employers close their internship applications in October and November for the following summer, while smaller and local places hire in February and March. 
+
+Source: thread_internship_timing.txt
+```
+
+### When should I make an appointment with advisor to lift registration hold? — run 1
+
+- Best distance: 0.6467 (refused by the gate)
+- Sources retrieved: thread_first_year_regret.txt, thread_internship_timing.txt
+
+```
+I don't have enough information about that.
+```
+
+### When should I make an appointment with advisor to lift registration hold? — run 2
+
+- Best distance: 0.6467 (refused by the gate)
+- Sources retrieved: thread_first_year_regret.txt, thread_internship_timing.txt
+
+```
+I don't have enough information about that.
+```
+
+### When should I make an appointment with advisor to lift registration hold? — run 3
+
+- Best distance: 0.6467 (refused by the gate)
+- Sources retrieved: thread_first_year_regret.txt, thread_internship_timing.txt
+
+```
+I don't have enough information about that.
+```
+
+### Where do people stay when they visit Givens Mill? — run 1
+
+- Best distance: 0.7084 (refused by the gate)
+- Sources retrieved: thread_commuting.txt, thread_laundry_timing.txt, thread_study_spots.txt, thread_winter_advice.txt
+
+```
+I don't have enough information about that.
+```
+
+### Where do people stay when they visit Givens Mill? — run 2
+
+- Best distance: 0.7084 (refused by the gate)
+- Sources retrieved: thread_commuting.txt, thread_laundry_timing.txt, thread_study_spots.txt, thread_winter_advice.txt
+
+```
+I don't have enough information about that.
+```
+
+### Where do people stay when they visit Givens Mill? — run 3
+
+- Best distance: 0.7084 (refused by the gate)
+- Sources retrieved: thread_commuting.txt, thread_laundry_timing.txt, thread_study_spots.txt, thread_winter_advice.txt
+
+```
+I don't have enough information about that.
+```
+
+### When do students go to Pellew Sands? — run 1
+
+- Best distance: 0.5916 (passed the gate)
+- Sources retrieved: thread_first_gen.txt, thread_first_year_regret.txt, thread_late_work.txt, thread_study_spots.txt
+
+```
+I do not have enough information to answer this question.
+```
+
+### When do students go to Pellew Sands? — run 2
+
+- Best distance: 0.5916 (passed the gate)
+- Sources retrieved: thread_first_gen.txt, thread_first_year_regret.txt, thread_late_work.txt, thread_study_spots.txt
+
+```
+I do not have enough information to answer this question.
+```
+
+### When do students go to Pellew Sands? — run 3
+
+- Best distance: 0.5916 (passed the gate)
+- Sources retrieved: thread_first_gen.txt, thread_first_year_regret.txt, thread_late_work.txt, thread_study_spots.txt
+
+```
+I do not have enough information to answer this question.
+```
+
+### How should I set up my courses if I commute everyday — run 1
+
+- Best distance: 0.4510 (passed the gate)
+- Sources retrieved: thread_bike_commute.txt, thread_commuting.txt
+
+```
+If you have a long commute, you should stack your courses so that you have three long days instead of five short ones. (Source: thread_commuting.txt)
+```
+
+### How should I set up my courses if I commute everyday — run 2
+
+- Best distance: 0.4510 (passed the gate)
+- Sources retrieved: thread_bike_commute.txt, thread_commuting.txt
+
+```
+According to `thread_commuting.txt`, you should stack your courses so that you have three long days instead of five short ones.
+```
+
+### How should I set up my courses if I commute everyday — run 3
+
+- Best distance: 0.4510 (passed the gate)
+- Sources retrieved: thread_bike_commute.txt, thread_commuting.txt
+
+```
+According to the document `thread_commuting.txt`, you should stack your courses because three long days beats five short ones by a wide margin.
+```
 ## Verdicts
 
 <!-- MET or MISSED for each of the five, against the target you wrote last
@@ -251,11 +396,12 @@ I also used AI while evaluating my retrieval results and choosing a relevance cu
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunks contain the answer | **MISSED** | Only 2 of the 5 test questions retrieved chunks containing the expected answer. This is below my target of 4 out of 5. |
+| 2 | Every answer names a source | **MISSED** | Only 2 of the 5 questions produced grounded answers that named a source document. The other questions returned insufficient-information responses, so this did not meet my target of 5 out of 5. |
+| 3 | The relevance gate stops out-of-corpus questions | **MET** | The relevance gate correctly refused all 5 out-of-scope questions. This exceeded my target of at least 4 out of 5. |
+| 4 | Chunks preserve complete sentences and thoughts | **MET** | All 5 sampled chunks preserved complete sentences and understandable thoughts, meeting my target of at least 4 out of 5. |
+| 5 | Answers contain expected information | **MISSED** | 2 of the 5 questions produced answers containing the expected information from `questions.py`. This is below my target of 3–4 out of 5. |
+
 
 ## Diagnoses
 
